@@ -1,0 +1,61 @@
+Create SM30 for Main table and its text table
+
+Main table
+@EndUserText.label : 'Request Status'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #C
+@AbapCatalog.dataMaintenance : #ALLOWED
+define table ztj_reqstat {
+  @AbapCatalog.foreignKey.screenCheck : true
+  key mandt   : mandt not null
+    with foreign key t000
+      where mandt = ztj_reqstat.mandt;
+  key staid   : ztj_staid not null;
+  include ztj_s_admfields;
+  lastchanged : abp_lastchange_tstmpl;
+
+}
+
+include structure
+@EndUserText.label : 'Administrative Fields'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+define structure ztj_s_admfields {
+  crtby : abp_creation_user;
+  crtdt : abp_creation_date;
+  crttm : abp_creation_time;
+  crtst : abp_creation_tstmpl;
+  chgby : abp_lastchange_user;
+  chgdt : abp_lastchange_date;
+  chgtm : abp_lastchange_time;
+  chgst : abp_lastchange_tstmpl;
+
+}
+
+text table
+@EndUserText.label : 'Request Status Txt'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #C
+@AbapCatalog.dataMaintenance : #ALLOWED
+define table ztj_reqstat_txt {
+  key mandt   : mandt not null;
+  @AbapCatalog.foreignKey.keyType : #TEXT_KEY
+  @AbapCatalog.foreignKey.screenCheck : true
+  key staid   : ztj_staid not null
+    with foreign key [1..*,1] ztj_reqstat
+      where mandt = ztj_reqstat_txt.mandt
+        and staid = ztj_reqstat_txt.staid;
+  @AbapCatalog.textLanguage
+  key spras   : lang not null;
+  stads       : sgtxt;
+  include ztj_s_admfields;
+  lastchanged : abp_lastchange_tstmpl;
+
+}
+
+in eclipse
+- right clich the main table, and select Generate ABAP Repository Objetcs
+- choose Generator as Business Configuration Maintenance Object
+- next
+- 
